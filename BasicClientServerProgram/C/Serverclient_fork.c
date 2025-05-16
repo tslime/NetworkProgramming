@@ -63,27 +63,34 @@ void main(){
         perror("Client failed to connect \n");
         exit(1);
     }else{
+
+        int pid = fork();
+
+        if(pid == 0){
         printf("Client conneted \n \n");
 
         //Handle communication exchange
-        char *msg_storage = (char*)(malloc(1000*sizeof(char)));
+        char *msg_storage = (char*)(malloc(100000*sizeof(char)));
 
        while(1){
-        memset(msg_storage,0,1000);
+        memset(msg_storage,0,100000);
         int msg_size = recv(client_fd,msg_storage,sizeof(msg_storage),0);
         if(msg_size == -1){
             perror("error during receiving a message");
             exit(1);
         }else{
             printf("Client says: %s \n",msg_storage);
-
             send(client_fd,"message received \n",strlen("message received \n"),0);
-            
         }          
-      } 
-        
-        close(client_fd);
+      }
+      close(client_fd);
+
+     }else close(client_fd);
+
     }
+
+
+
   }
 
 
