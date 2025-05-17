@@ -11,11 +11,15 @@
 #include<netinet/in.h>
 #include<arpa/inet.h>
 
+#include "Msg_handler.h"
+
+
 void initSocketServerAddr(struct sockaddr_in *addr){
     addr->sin_family = AF_INET;
     addr->sin_port = htons(6379);
     inet_pton(AF_INET,"192.168.2.57",&(addr->sin_addr));
 }
+
 
 void main(){
 
@@ -51,11 +55,7 @@ void main(){
         exit(1);
     }else printf("Server listening at port %d \n",6379);
 
-
-
-
     //Make server accept connections. Here we also pass the structure where the client's IP will be stored
-
     while(1){
 
     client_fd = accept(server_fd,(struct sockaddr*)client_address,client_ipsize);
@@ -69,29 +69,17 @@ void main(){
         if(pid == 0){
         printf("Client conneted \n \n");
 
-        //Handle communication exchange
-        char *msg_storage = (char*)(malloc(100000*sizeof(char)));
-
+       //Handle communication exchange
        while(1){
-        memset(msg_storage,0,100000);
-        int msg_size = recv(client_fd,msg_storage,sizeof(msg_storage),0);
-        if(msg_size == -1){
-            perror("error during receiving a message");
-            exit(1);
-        }else{
-            printf("Client says: %s \n",msg_storage);
-            send(client_fd,"message received \n",strlen("message received \n"),0);
-        }          
+        recv_message(client_fd,getpid());
+        send_message(client_fd,"message received \n");
       }
       close(client_fd);
 
      }else close(client_fd);
-
+     
     }
 
-
-
   }
-
 
 }
