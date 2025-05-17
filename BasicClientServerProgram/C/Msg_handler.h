@@ -14,7 +14,7 @@
 #include<arpa/inet.h>
 
 
-void recv_message(int fd,int client_id);
+void recv_message(int fd);
 void send_message(int fd,char *message);
 
 

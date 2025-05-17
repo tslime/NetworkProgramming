@@ -11,7 +11,7 @@
 #include<netinet/in.h>
 #include<arpa/inet.h>
 
-void recv_message(int fd,int client_id){
+void recv_message(int fd){
 
     int bytes_received = 0;
     char *msg = (char*)(malloc(sizeof(char)));
@@ -34,7 +34,7 @@ void recv_message(int fd,int client_id){
             }
     }
    
-    printf("Client %d says : %s \n",client_id,msg);
+    printf("%s \n",msg);
 }
 
 

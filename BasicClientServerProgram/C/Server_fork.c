@@ -71,7 +71,8 @@ void main(){
 
        //Handle communication exchange
        while(1){
-        recv_message(client_fd,getpid());
+        printf("Client %d says ",getpid());
+        recv_message(client_fd);
         send_message(client_fd,"message received \n");
       }
       close(client_fd);
