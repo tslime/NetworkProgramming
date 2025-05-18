@@ -2,7 +2,6 @@
 #include<malloc.h>
 #include<unistd.h>
 #include<stdlib.h>
-#include<signal.h>
 #include<stdbool.h>
 #include<string.h>
 
@@ -10,6 +9,8 @@
 #include<sys/socket.h>
 #include<netinet/in.h>
 #include<arpa/inet.h>
+#include<sys/epoll.h>
+
 
 #include "Msg_handler.h"
 
@@ -55,28 +56,46 @@ void main(){
         exit(1);
     }else printf("Server listening at port %d \n",6379);
 
+    //Creation of event structure to handle multiple clients
+    int fd_manager = epoll_create1(0);
+    struct epoll_event *server_watcher = (struct epoll_event*)(malloc(sizeof(struct epoll_event)));
+    server_watcher->data.fd = server_fd;
+    server_watcher->events = EPOLLIN;
+    epoll_ctl(fd_manager,EPOLL_CTL_ADD,server_fd,server_watcher);
+
+    //Creation of structure to hold events\clients 
+    struct epoll_event *events = (struct epoll_event*)(malloc(128*sizeof(struct epoll_event)));
+    
+
     //Make server accept connections. Here we also pass the structure where the client's IP will be stored
     while(1){
 
-    client_fd = accept(server_fd,(struct sockaddr*)client_address,client_ipsize);
-    if(client_fd == -1){
-        perror("Client failed to connect \n");
-        exit(1);
-    }else{
+    int num_events = epoll_wait(fd_manager,events,128,-1);
 
-   
-        printf("Client conneted \n \n");
+    int i = 0;
+    while(num_events > 0){
+        if(events[i].data.fd == server_fd){
 
-       //Handle communication exchange
-       while(1){
-        printf("Client %d says ",getpid());
-        recv_message(client_fd);
-        send_message(client_fd,"message received \n");
-      }
+            while( (client_fd = accept(server_fd,(struct sockaddr*)client_address,client_ipsize)) != -1 ){
+                struct epoll_event *client_event = (struct epoll_event*)(malloc(sizeof(struct epoll_event)));
+                client_event->events = EPOLLIN;
+                client_event->data.fd = client_fd;
+                epoll_ctl(fd_manager,EPOLL_CTL_ADD,client_fd,client_event);
+            }
+             
+            printf("Client/s conneted \n \n");
+        }else{
+            //Handle communication exchange
+            while(1){
+            printf("Client %d says ",getpid());
+            recv_message(client_fd);
+            send_message(client_fd,"message received \n");
+            }
       close(client_fd);
-     
-    }
+      }
+    }    
 
   }
 
 }
+
