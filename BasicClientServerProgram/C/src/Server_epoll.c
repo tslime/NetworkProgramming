@@ -34,7 +34,7 @@ void main(){
 
 
     //socket creation
-    server_fd = socket(AF_INET,SOCK_STREAM,0);
+    server_fd = socket(AF_INET,SOCK_STREAM | SOCK_NONBLOCK,0);
     if(server_fd == -1){
         perror("Socket creation failed \n");
         exit(0);
@@ -65,15 +65,15 @@ void main(){
 
     //Creation of structure to hold events\clients 
     struct epoll_event *events = (struct epoll_event*)(malloc(128*sizeof(struct epoll_event)));
-    
 
     //Make server accept connections. Here we also pass the structure where the client's IP will be stored
-    while(1){
+    while(true){
 
     int num_events = epoll_wait(fd_manager,events,128,-1);
 
     int i = 0;
-    while(num_events > 0){
+    while(i < num_events){
+
         if(events[i].data.fd == server_fd){
 
             while( (client_fd = accept(server_fd,(struct sockaddr*)client_address,client_ipsize)) != -1 ){
@@ -81,21 +81,25 @@ void main(){
                 client_event->events = EPOLLIN;
                 client_event->data.fd = client_fd;
                 epoll_ctl(fd_manager,EPOLL_CTL_ADD,client_fd,client_event);
+                free(client_event);
+                printf("Client connected \n \n");
             }
-             
-            printf("Client/s conneted \n \n");
+
         }else{
             //Handle communication exchange
-            while(1){
-            printf("Client %d says ",getpid());
-            recv_message(client_fd);
-            send_message(client_fd,"message received \n");
-            }
-      close(client_fd);
+            printf("Client %d says ",events[i].data.fd);
+            recv_message(events[i].data.fd);
+            send_message(events[i].data.fd,"message received \n");
       }
+
+      i++;
     }    
 
   }
+
+  free(server_address);
+  free(client_address);
+  free(client_ipsize);
 
 }
 
