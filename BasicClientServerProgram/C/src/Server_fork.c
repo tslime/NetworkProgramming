@@ -83,4 +83,8 @@ void main(){
 
   }
 
+  free(server_address);
+  free(client_address);
+  free(client_ipsize);
+
 }
