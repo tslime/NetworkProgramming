@@ -1,3 +1,6 @@
+#include "Msghandler.h"
+
+
 #include<iostream>
 #include<string.h>
 #include<string>
@@ -34,8 +37,9 @@ class Serverfork{
 
 int main(){
 
-    int fd_server;
-    int fd_client;
+    int server_fd;
+    int client_fd;
+    int pid;
     int bind_server;
     int server_listening;
     int accept_result;
@@ -45,48 +49,55 @@ int main(){
     *client_ipsize = sizeof(struct sockaddr_in);
 
 
-    fd_server = socket(AF_INET,SOCK_STREAM,0);
-    if(fd_server == -1){
+    server_fd = socket(AF_INET,SOCK_STREAM,0);
+    if(server_fd == -1){
         perror("Failed to create socket \n");
         exit(1);
     }
 
     Serverfork::initServerSocketAddr(server_address);
-    bind_server = bind(fd_server,(struct sockaddr*)server_address,sizeof(struct sockaddr_in));
+    bind_server = bind(server_fd,(struct sockaddr*)server_address,sizeof(struct sockaddr_in));
     if(bind_server == -1){
         perror("Failed to bind socket to an address \n");
         exit(1);
     }
 
-    server_listening = listen(fd_server,128);
+    server_listening = listen(server_fd,128);
     if(server_listening == -1){
         perror("Server failed to open to listening");
         exit(1);
     }
 
-    char *buffer = (char*)(malloc(100*sizeof(string)));
-    string *message = (string*)(malloc(100*sizeof(string)));
+    string *buffer = new string(1024,'\0');
+    string *message = new string(1024,'\0');
 
     while(true){
-            fd_client = accept(fd_server,(struct sockaddr*)client_address,client_ipsize);
-            if(fd_client == -1){
-                perror("Connection failed \n");
-                exit(1);
-            }
 
+        client_fd = accept(server_fd,(struct sockaddr*)client_address,client_ipsize);
+        if(client_fd == -1){
+            perror("Connection failed \n");
+            exit(1);
+        }
 
+        pid = fork();
+
+          if(pid == 0){
             cout << "client connected.... \n";
+            *message = "message received \n";
             while(true){    
-                recv(fd_client,buffer,sizeof(buffer),0);
-                cout << "Client says: "<< buffer << " \n";
-                send(fd_client,"message received \n",strlen("message received \n"),0);
+
+                cout << "Client " << getpid() << " says: " ;
+                Msghandler::receive_message(client_fd,buffer);
+                Msghandler::send_message(client_fd,message);
+            
             }
 
-            close(fd_server);
-            close(fd_client);
+            close(client_fd);
+            close(server_fd);
+           
+          }else close(client_fd);
+          
     }
-
-    
 
     exit(1);
 }
