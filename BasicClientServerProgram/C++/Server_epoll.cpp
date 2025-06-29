@@ -74,32 +74,49 @@ int main(){
     
     int fd_manager = epoll_create1(0);
 
+    //Add server file descriptor to watch list of events
+    struct epoll_event *server_watcher = (struct epoll_event*)(malloc(sizeof(struct epoll_event)));
+    server_watcher->data.fd = server_fd;
+    server_watcher->events = EPOLLIN;
+    epoll_ctl(fd_manager,EPOLL_CTL_ADD,server_fd,server_watcher);
+
 
     struct epoll_event *events = (struct epoll_event*)(malloc(128*sizeof(struct epoll_event)));
 
     while(true){
 
-        client_fd = accept(server_fd,(struct sockaddr*)client_address,client_ipsize);
-        if(client_fd == -1){
-            perror("Connection failed \n");
-            exit(1);
+        int num_events = epoll_wait(fd_manager,events,128,-1);
+
+        int i = 0;
+        while(i < num_events){
+            if(events[i].data.fd == server_fd){
+                
+                client_fd = accept(server_fd,(struct sockaddr*)client_address,client_ipsize);
+                if(client_fd == -1){
+                    perror("Connection failed \n");
+                    exit(1);
+                    }
+                
+                struct epoll_event *new_client = (struct epoll_event*)(malloc(sizeof(struct epoll_event)));
+                new_client->data.fd = client_fd;
+                new_client->events  = EPOLLIN;
+                epoll_ctl(fd_manager,EPOLL_CTL_ADD,client_fd,new_client);
+
+                cout << "client connected.... \n";
+                free(new_client);
+            }else{
+                
+                //communication exchange
+                *message = "message received \n"; 
+
+                cout << "Client " << events[i].data.fd << " says: " ;
+                Msghandler::receive_message(events[i].data.fd,buffer);
+                Msghandler::send_message(events[i].data.fd,message);
+
+            }
+            i++;
         }
 
-   
-            cout << "client connected.... \n";
-            *message = "message received \n";
-            while(true){    
-
-                cout << "Client " << getpid() << " says: " ;
-                Msghandler::receive_message(client_fd,buffer);
-                Msghandler::send_message(client_fd,message);
-            
-            }
-
-            close(client_fd);
-            close(server_fd);
-           
-          
     }
 
     exit(1);
