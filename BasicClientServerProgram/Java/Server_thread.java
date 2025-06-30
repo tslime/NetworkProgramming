@@ -11,13 +11,8 @@ class Serverthread{
     public static void main(String args[]){
 
         Scanner sc = new Scanner(System.in);
-
+    
         ServerSocket fd_server = null;
-        Socket fd_client = null;
-        InputStream in = null;
-        OutputStream out = null;
-        BufferedReader r = null;
-        PrintWriter w = null;
 
 
         try{
@@ -26,47 +21,47 @@ class Serverthread{
             System.out.println("Error in socket activation");
         }
 
+    while(true){
+        Socket temp = null;
 
       if(fd_server != null){
         try{
-             fd_client = fd_server.accept();
+             temp = fd_server.accept();
              System.out.println("Client connected.....");
         }catch(IOException e2){
             System.out.println("Error during client connection");
         }      
       }
 
-    try{
-        in = fd_client.getInputStream();
-        out = fd_client.getOutputStream();
-     }catch(IOException e3){
-        System.out.print("Failed to get stream");
-    }
-     
-    try{
-        r = new BufferedReader(new InputStreamReader(in));
-        w = new PrintWriter(out,true);
+    final Socket fd_client = temp;
+    Thread t = new Thread(()->{
 
-        while(true){
-        String client_msg = r.readLine();
-        System.out.println("Client says: "+client_msg);
-        w.println("Message received");
-        }
+        try{
+           InputStream in = fd_client.getInputStream();
+           OutputStream out = fd_client.getOutputStream();
+           BufferedReader r = new BufferedReader(new InputStreamReader(in));
+           PrintWriter w = new PrintWriter(out,true);
+
+            while(true){
+                String client_msg = r.readLine();
+                System.out.println("Client "+Thread.currentThread().getId()+" says: "+client_msg);
+                w.println("Message received");
+            }
         
-    }catch(IOException e4){
-        System.out.println("Error during message exchange");
-    } 
+        }catch(IOException e4){
+            System.out.println("Error during message exchange");
+            } 
    
 
-  try{
-    fd_client.close();
-    fd_server.close();
-  }catch(IOException e5){
-    System.out.println("Error closing a socket");
-  }
+        try{
+            fd_client.close();
+        }catch(IOException e5){
+            System.out.println("Error closing a socket");
+        }
 
-
-      
-  }
+    });
+    t.start();
+  }    
+ }
 
 }
