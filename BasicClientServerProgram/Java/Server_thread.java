@@ -12,6 +12,7 @@ class Serverthread{
 
         Scanner sc = new Scanner(System.in);
     
+
         ServerSocket fd_server = null;
 
 
@@ -22,7 +23,7 @@ class Serverthread{
         }
 
     while(true){
-        Socket temp = null;
+    Socket temp = null;
 
       if(fd_server != null){
         try{
@@ -35,24 +36,15 @@ class Serverthread{
 
     final Socket fd_client = temp;
     Thread t = new Thread(()->{
-
-        try{
-           InputStream in = fd_client.getInputStream();
-           OutputStream out = fd_client.getOutputStream();
-           BufferedReader r = new BufferedReader(new InputStreamReader(in));
-           PrintWriter w = new PrintWriter(out,true);
-
-            while(true){
-                String client_msg = r.readLine();
-                System.out.println("Client "+Thread.currentThread().getId()+" says: "+client_msg);
-                w.println("Message received");
+        
+        Msghandler msg = new Msghandler(fd_client);
+        
+         boolean b = true;
+         while(b){
+                b = msg.receive_message(msg.r,Thread.currentThread().getId());
+                msg.send_message(msg.w);
             }
         
-        }catch(IOException e4){
-            System.out.println("Error during message exchange");
-            } 
-   
-
         try{
             fd_client.close();
         }catch(IOException e5){
