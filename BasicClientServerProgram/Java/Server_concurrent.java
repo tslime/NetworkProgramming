@@ -16,7 +16,6 @@ class Serverconcurrent{
 
         Scanner sc = new Scanner(System.in);
 
-        System.out.println("test");
         ServerSocketChannel fd_server = null;
         Selector fd_manager = null;
 
@@ -65,9 +64,9 @@ class Serverconcurrent{
 
                 }else{
                     SocketChannel c = (SocketChannel)k.channel();
-                    Msghandler m = new Msghandler(c);
+                    Msghandler m = new Msghandler(1024);
                     m.receive_message(c,k.hashCode());
-                    m.send_message();
+                    m.send_message(c);
                 }
 
             } 
