@@ -38,11 +38,13 @@ class Serverthread{
     Thread t = new Thread(()->{
         
         Msghandlerthread msg = new Msghandlerthread(fd_client);
-        
+        String m = null;
+
          boolean b = true;
          while(b){
-                b = msg.receive_message(msg.r,Thread.currentThread().getId());
-                msg.send_message(msg.w);
+                m = msg.receive_message(msg.r);
+                System.out.println("Client "+Thread.currentThread().getId()+" says: "+m);
+                msg.send_message(msg.w,"Message received");
             }
         
         try{

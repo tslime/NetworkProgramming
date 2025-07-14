@@ -31,33 +31,26 @@ class Msghandlerthread{
 
 
     
-    public boolean receive_message(BufferedReader rc,long client_num){
-        
-        try{
-            String m = rc.readLine();
-            
-            if(m == null)
-            return false;
-            else {
-                 System.out.println("Client "+client_num+" says: "+m);
-                 return true;
-                }
+    public String receive_message(BufferedReader rc){
+         String m = null;
 
+        try{
+          m = rc.readLine();        
         }catch(IOException e){
             System.out.println("Error during message reception");
-            return false;
         }
+
+         return m;  
     }
 
 
-    public void send_message(PrintWriter wr){
+    public void send_message(PrintWriter wr,String m){
 
-        wr.println("Message received");
+        wr.println(m);
       
         if(wr.checkError())
         System.out.println("Error during message transmission");
         
-
     }
 
 
