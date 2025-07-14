@@ -37,7 +37,7 @@ class Serverthread{
     final Socket fd_client = temp;
     Thread t = new Thread(()->{
         
-        Msghandler msg = new Msghandler(fd_client);
+        Msghandlerthread msg = new Msghandlerthread(fd_client);
         
          boolean b = true;
          while(b){

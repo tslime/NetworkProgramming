@@ -10,23 +10,16 @@ import java.nio.ByteBuffer;
 import java.nio.charset.*;
 
 
-class Msghandler{
+class Msghandlerconc{
     
 
     ByteBuffer buffer;
 
-    /*
-    InputStream in;
-    OutputStream out;
-    BufferedReader r;
-    PrintWriter w;
-    */
 
-    public Msghandler(int size){
+    public Msghandlerconc(int size){
             this.buffer = ByteBuffer.allocate(size);
      
     }
-
 
 
    public void receive_message(SocketChannel s,int num){
@@ -68,6 +61,14 @@ class Msghandler{
     }
 
 
+
+
+    /*
+    InputStream in;
+    OutputStream out;
+    BufferedReader r;
+    PrintWriter w;
+    */
 
     /*
     public static void main(String args[]){

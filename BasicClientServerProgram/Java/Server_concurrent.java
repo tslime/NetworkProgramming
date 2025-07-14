@@ -64,7 +64,7 @@ class Serverconcurrent{
 
                 }else{
                     SocketChannel c = (SocketChannel)k.channel();
-                    Msghandler m = new Msghandler(1024);
+                    Msghandlerconc m = new Msghandlerconc(1024);
                     m.receive_message(c,k.hashCode());
                     m.send_message(c);
                 }
