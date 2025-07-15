@@ -18,22 +18,29 @@ class Client{
         Socket c = new Socket();
 
         try{
-            c.connect(new InetSocketAddress("192.168.2.57"),6379);
+            c.connect(new InetSocketAddress("192.168.2.57",6379));
             Msghandlerthread msg = new Msghandlerthread(c);
             String m = null;
 
-            b = true;
+            boolean b = true;
             while(b){
-                System.out.print("Write the message you want to send: ");
-                m = sc.readLine();
+                System.out.println("Write the message you want to send: ");
+                m = sc.nextLine();
 
                 msg.send_message(msg.w,m);
                 m = null;
-                m = msg.receive_message(c);
+                m = msg.receive_message(msg.r);
                 System.out.println(m);
+                m = null;
             }
 
-        }catch(IOException e){
+        try{
+            c.close();
+            }catch(IOException e1){
+                System.out.println("Error during socket closure");
+            }
+
+        }catch(IOException e2){
             System.out.println("Error while attempting connection");
         }
 

@@ -43,8 +43,12 @@ class Serverthread{
          boolean b = true;
          while(b){
                 m = msg.receive_message(msg.r);
+                if(m == null)
+                b = false;
+                else{
                 System.out.println("Client "+Thread.currentThread().getId()+" says: "+m);
                 msg.send_message(msg.w,"Message received");
+                }
             }
         
         try{
