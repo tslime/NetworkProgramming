@@ -1,25 +1,37 @@
 import os
 import sys
 import socket
+import threading
 
-
+from Msghandler import Msghandler
 
 SERVER_ADDR = "192.168.2.57"
 PORT = 6379
+msg = Msghandler(1024)
+c_num = 0
+
+def handle_client(soc,c_addr,c_num):
+    while True:
+        m = msg.receive_message(fd_client)
+        print("client ",c_num," says: ",m,end="\n")
+        msg.send_message(fd_client,"Message received \n")
+    
+    soc.close()
+
+
+
 
 try:
     s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
     s.bind((SERVER_ADDR,PORT))
     s.listen()
-    fd_client, addr = s.accept()
 
-    print("A Client connected....\n\n")
     while True:
-        msg = fd_client.recv(1024)
-        print("client says: ",msg.decode(),end="\n")
-        fd_client.sendall("Message received \n".encode()) 
-    
-    s.close()
+        fd_client, client_addr = s.accept()
+        print("A Client connected....\n")
+        c_num  = c_num+1
+        t = threading.Thread(target=handle_client,args=(fd_client,client_addr,c_num))
+        t.start()
 
 except socket.error as e:
     print("Socket error: ",e,end="\n")
