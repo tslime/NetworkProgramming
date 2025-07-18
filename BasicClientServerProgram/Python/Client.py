@@ -2,7 +2,7 @@ import os
 import sys
 import socket
 
-from Msghandler import Msghandler
+from inc.Msghandler import Msghandler
 
 HOST_ADDR = "192.168.2.57"
 PORT = 6379

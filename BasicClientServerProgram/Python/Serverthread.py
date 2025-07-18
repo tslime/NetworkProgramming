@@ -3,14 +3,14 @@ import sys
 import socket
 import threading
 
-from Msghandler import Msghandler
+from inc.Msghandler import Msghandler
 
 SERVER_ADDR = "192.168.2.57"
 PORT = 6379
 msg = Msghandler(1024)
 c_num = 0
 
-def handle_client(soc,c_addr,c_num):
+def handle_client(soc,c_num):
     while True:
         m = msg.receive_message(fd_client)
         print("client ",c_num," says: ",m,end="\n")
@@ -30,8 +30,10 @@ try:
         fd_client, client_addr = s.accept()
         print("A Client connected....\n")
         c_num  = c_num+1
-        t = threading.Thread(target=handle_client,args=(fd_client,client_addr,c_num))
+        t = threading.Thread(target=handle_client,args=(fd_client,c_num))
         t.start()
+    
+    s.close()
 
 except socket.error as e:
     print("Socket error: ",e,end="\n")
