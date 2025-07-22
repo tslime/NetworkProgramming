@@ -22,7 +22,6 @@ except socket.error as e1:
 
 
 
-
 while True:
     read_events,write_events,errors = select.select(socket_list,[],[]) 
         
