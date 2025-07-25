@@ -16,8 +16,6 @@ const server = net.createServer(function(socket){
      }catch(e){
         console.error("Error handling data: ",e);
      }
-        
-    
     });
 });
 
