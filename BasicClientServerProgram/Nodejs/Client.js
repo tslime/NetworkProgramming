@@ -14,13 +14,23 @@ const client = net.createConnection({port:PORT,host:HOST},function(){
     s.prompt();
 });
 
+client.on('error',function(error){
+    console.error("Connection error: ",error.message);
+});
+
 
 s.on('line',function(line){
     client.write(line+'\n');
 });
 
 client.on('data',function(data){
+
+try{
     console.log(data.toString());
     console.log("\n");
     s.prompt()
+ }catch (e){
+    console.error("Error handling data: ",e);
+    }
+   
 });

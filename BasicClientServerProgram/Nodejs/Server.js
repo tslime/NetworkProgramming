@@ -10,10 +10,19 @@ const server = net.createServer(function(socket){
     socket.clientid = c_num;
 
     socket.on('data',function(data){
+     try{
         console.log("Client ",socket.clientid," says: ", data.toString());
         socket.write("Message received \n");
+     }catch(e){
+        console.error("Error handling data: ",e);
+     }
+        
     
     });
 });
 
 server.listen(PORT,HOST);
+
+server.on('error',function(error){
+    console.error("Server error: ",error.message);
+});
