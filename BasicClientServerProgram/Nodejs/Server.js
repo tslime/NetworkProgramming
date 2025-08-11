@@ -1,8 +1,8 @@
 const net = require('net');
 let c_num = 0;
 
-const PORT = 6379;
-const HOST = '192.168.2.57';
+const PORT = PORT_NUM;
+const HOST = 'IP_NUM';
 
 const server = net.createServer(function(socket){
     console.log('New connection.....');

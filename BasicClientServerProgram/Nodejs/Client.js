@@ -1,8 +1,8 @@
 const net = require('net')
 const readline = require('readline')
 
-const PORT = 6379;
-const HOST = '192.168.2.57';
+const PORT = PORT_NUM;
+const HOST = 'IP_NUM';
 
 const s = readline.createInterface({
     input: process.stdin,

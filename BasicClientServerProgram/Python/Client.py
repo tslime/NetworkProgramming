@@ -4,8 +4,8 @@ import socket
 
 from inc.Msghandler import Msghandler
 
-HOST_ADDR = "192.168.2.57"
-PORT = 6379
+HOST_ADDR = "IP_NUM"
+PORT = PORT_NUM
 c_msg = Msghandler(1024) 
 
 try:

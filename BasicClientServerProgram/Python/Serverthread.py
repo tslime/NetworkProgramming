@@ -5,8 +5,8 @@ import threading
 
 from inc.Msghandler import Msghandler
 
-SERVER_ADDR = "192.168.2.57"
-PORT = 6379
+SERVER_ADDR = "IP_NUM"
+PORT = PORT_NUM
 msg = Msghandler(1024)
 c_num = 0
 

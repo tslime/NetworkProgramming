@@ -17,8 +17,8 @@
 
 void initSocketServerAddr(struct sockaddr_in *addr){
     addr->sin_family = AF_INET;
-    addr->sin_port = htons(6379);
-    inet_pton(AF_INET,"192.168.2.57",&(addr->sin_addr));
+    addr->sin_port = htons(PORT_NUM);
+    inet_pton(AF_INET,"IP_NUM",&(addr->sin_addr));
 }
 
 

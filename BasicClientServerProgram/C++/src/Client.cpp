@@ -25,8 +25,8 @@ class Client{
     public:
             static void initClientSocketAddr(struct sockaddr_in *address){
                 address->sin_family = AF_INET;
-                address->sin_port = htons(6379);
-                inet_pton(AF_INET,"192.168.2.57",&(address->sin_addr));
+                address->sin_port = htons(PORT_NUM);
+                inet_pton(AF_INET,"IP_NUM",&(address->sin_addr));
             }
 
 };

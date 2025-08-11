@@ -5,8 +5,8 @@ import asyncio
 from inc.Msghandler import Msghandler
 from functools import partial
 
-SERVER_ADDR = "192.168.2.57"
-PORT = 6379
+SERVER_ADDR = "UP_NUM"
+PORT = PORT_NUM
 c_num = 0
 
 async def handle_client(r,w):

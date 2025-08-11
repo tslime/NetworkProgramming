@@ -17,7 +17,7 @@ class Serverthread{
 
 
         try{
-            fd_server = new ServerSocket(6379);
+            fd_server = new ServerSocket(PORT_NUM);
         }catch(IOException e1){
             System.out.println("Error in socket activation");
         }

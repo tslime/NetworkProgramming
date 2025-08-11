@@ -5,8 +5,8 @@ import select
 
 from inc.Msghandler import Msghandler
 
-HOST = "192.168.2.57"
-PORT = 6379
+HOST = "IP_NUM"
+PORT = PORT_NUM
 c_num = 0
 fd_clients = {}
 

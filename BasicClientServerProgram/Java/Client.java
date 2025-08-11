@@ -18,7 +18,7 @@ class Client{
         Socket c = new Socket();
 
         try{
-            c.connect(new InetSocketAddress("192.168.2.57",6379));
+            c.connect(new InetSocketAddress("IP_NUM",PORT_NUM));
             Msghandlerthread msg = new Msghandlerthread(c);
             String m = null;
 

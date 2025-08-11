@@ -21,7 +21,7 @@ class Serverconcurrent{
 
         try{
             fd_server = ServerSocketChannel.open();
-            fd_server.bind(new InetSocketAddress(6379));
+            fd_server.bind(new InetSocketAddress(PORT_NUM));
             fd_server.configureBlocking(false);
         }catch(IOException e1){
             System.out.println("Error opening socket channel");
