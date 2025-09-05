@@ -1,0 +1,12 @@
+# Ensure GitHub Linguist detects all language folders
+BasicClientServerProgram/C/* linguist-detectable=true
+BasicClientServerProgram/C++/* linguist-detectable=true
+BasicClientServerProgram/Java/* linguist-detectable=true
+BasicClientServerProgram/Python/* linguist-detectable=true
+BasicClientServerProgram/Nodejs/* linguist-detectable=true
+
+# Ignore compiled/binary files so they don't skew stats
+*.class linguist-vendored
+*.o linguist-vendored
+*.exe linguist-vendored
+*.out linguist-vendored
