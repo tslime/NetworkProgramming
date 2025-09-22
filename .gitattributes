@@ -25,3 +25,11 @@
 *.so    linguist-vendored
 *.dll   linguist-vendored
 __pycache__/* linguist-vendored
+
+# --- Hard-assign languages by folder ---
+
+BasicClientServerProgram/C/*      linguist-language=C
+BasicClientServerProgram/C++/*    linguist-language=C++
+BasicClientServerProgram/Java/*   linguist-language=Java
+BasicClientServerProgram/Python/* linguist-language=Python
+BasicClientServerProgram/Nodejs/* linguist-language=JavaScript
