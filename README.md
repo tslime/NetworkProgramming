@@ -11,7 +11,6 @@ The project includes:
 - **Fork-like concurrency**: Handling multiple clients via a unique thread/process for each connection.
 - **Robust event-driven concurrency**: Using OS mechanisms like `epoll`, `select`, or modern asynchronous Python libraries for efficient client handling.
 
----
 
 ## Project Structure
 
@@ -37,7 +36,6 @@ server.listen(8080, () => console.log('Server listening on port 8080'));
 
 [Node.js Server](BasicClientServerProgram/Nodejs/Server.js)
 
----
 
 ### 2. C
 - **Simple Implementation**: Directly uses low-level sockets for single client handling.
@@ -74,7 +72,6 @@ for (int i = 0; i < num_events; i++) {
 
 [Explore all C implementations](https://github.com/tslime/NetworkProgramming/tree/main/BasicClientServerProgram/C)
 
----
 
 ### 3. C++
 - **Simple Implementation**: Socket-based client handling with object-oriented code structure.
@@ -111,7 +108,6 @@ for (int i = 0; i < num_events; i++) {
 
 [Explore all C++ implementations](https://github.com/tslime/NetworkProgramming/tree/main/BasicClientServerProgram/C++/src)
 
----
 
 ### 4. Java
 - **Concurrency with Threads**: Uses `ServerSocket` to spawn new threads for each client.
@@ -148,8 +144,6 @@ while (true) {
 ```
 
 [Explore all Java implementations](https://github.com/tslime/NetworkProgramming/tree/main/BasicClientServerProgram/Java)
-
----
 
 ### 5. Python
 - **Simple Implementation**: Minimal socket server.
@@ -193,7 +187,6 @@ The table below highlights Concurrency Level (capacity to handle multiple client
 | **Concurrency Level**  | **High**     | **Very High** | **Very High**| **High**    | **High**   |
 | **Ease of Implementation** | **High**     | *Low*       | *Low*       | **Medium**  | **Medium** |
 
----
 
 ### Table Description:
 1. **Concurrency Level**:
@@ -207,7 +200,6 @@ The table below highlights Concurrency Level (capacity to handle multiple client
      - **High**: Node.js abstracts all the complexity with its event loop.
      - **Medium**: Java and Python offer a balance of abstraction and control.
 
----
 
 ## Conclusion
 
