@@ -1,5 +1,5 @@
 use std::net::TcpListener;
-use std::io::Read;
+use std::io::{Read,Write};
 
 fn main(){
 
@@ -8,9 +8,13 @@ fn main(){
     
     let (mut stream,address) = server_socket.accept().unwrap();
     let mut buffer = [0;512];
-    let bytes_read = stream.read(&mut buffer).unwrap();
+    
 
-    let message = String::from_utf8_lossy(&buffer[..bytes_read]);
-
-    println!("client message: {}",message);
+    loop{
+          let bytes_read = stream.read(&mut buffer).unwrap();
+          let message = String::from_utf8_lossy(&buffer[..bytes_read]);
+          println!("client message: {}",message);
+          stream.write_all(b"message received! \n\n").unwrap();
+    };
+  
 }
