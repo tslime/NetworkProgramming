@@ -1,21 +1,29 @@
-use std::net::{TcpListener,TcpStream};
-use std::io::{Read,Write};
-
-
 mod utils;
 use utils::handle_client::handle_client;
 
+use clap::Parser;
+use std::net::TcpListener;
+use std::error;
+use log::{error,info,warn,debug,trace};
 
-fn main(){
 
-    let server_socket = TcpListener::bind("192.168.2.57:2222").unwrap();
-    println!("Server running.... \n");
-    let (mut stream,address) = server_socket.accept().unwrap();
+#[derive(Parser)]
+struct Arguments{
+    #[clap(long)]
+    ip_and_port: String,
+}
+
+fn main() -> Result<(),Box<dyn error::Error>> {
+    env_logger::init();
+
+    let args = Arguments::parse();
+    let server_socket = TcpListener::bind(&args.ip_and_port).map_err(|e| {error!("Failed to bind {}", e);e})?;
+    info!("Sever started and is running successfully on {}",args.ip_and_port);
+
     
-    
-    loop{
-        handle_client(&mut stream);
-        stream.write_all(b"message received! \n\n").unwrap();
-    };
-  
+    let (stream,_) = server_socket.accept().map_err(|e| {error!("Failed to accept client {}", e);e})?;
+    info!("Client accepted successfully!");
+    handle_client(stream)?;
+
+    Ok(())
 }
