@@ -15,15 +15,25 @@ struct Arguments{
 }
 
 fn main() -> Result<(),Box<dyn error::Error>> {
-    env_logger.init();
+    env_logger::init();
 
-    let concurrent_server_socket = TcpListener::bind("192.168.2.57:2222").map_err(|e| {error!("Failed to bind {}", e);e})?;
+    let args = Arguments::parse();
+    let concurrent_server_socket = TcpListener::bind(&args.ip_and_port).map_err(|e| {error!("Failed to bind {}", e);e})?;
     info!("Concurrent server successfully started and running....");
 
     for incoming_request in concurrent_server_socket.incoming(){
-       let mut client_stream = incoming_request.map_err(|e| {error!("Failed to accept client {}", e);e})?;
+       let client_stream = match incoming_request{
+        Ok(stream) => stream,
+        Err(e) => {
+            error!("connection error {}",e);
+            continue;
+        } 
+       };
+
        thread::spawn( move || {
-        handle_client(client_stream)?;
+        if let Err(e) = handle_client(client_stream) {
+            error!("Error handling client: {:?}",e);
+        }
        });
     }
 
